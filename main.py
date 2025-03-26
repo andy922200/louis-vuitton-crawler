@@ -19,7 +19,11 @@ class LouisVuittonAPI(object):
         cls()
         self.now = datetime.utcnow()
         self.headers = {
-            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.5359.125 Safari/537.36'
+            "Accept": "application/json, text/plain, */*",
+            "Accept-Language": "zh-TW,zh;q=0.9",
+            "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
+            "Connection": "keep-alive",
+            "X-Requested-With": "XMLHttpRequest"
         }
         self.region_to_lang = {
             'UK': 'eng-gb',
@@ -121,7 +125,7 @@ class LouisVuittonAPI(object):
         print("=" * 60)
 
         sku_simple_info_url= f"{lvRegion['api_domain']}/api/{lvRegion['lang']}/catalog/sku/{sku}/persodetails"
-        sku_simple_info_url_text = requests.get(sku_simple_info_url, headers = self.headers).text
+        sku_simple_info_url_text = requests.get(sku_simple_info_url, headers = self.headers, timeout=10).text
         sku_simple_info = json.loads(sku_simple_info_url_text)
 
         if  sku_simple_info.get('errors') and len(sku_simple_info['errors']) > 0:
@@ -131,7 +135,7 @@ class LouisVuittonAPI(object):
 
         if  sku_simple_info['productId']:
             product_info_url = f"{lvRegion['api_domain']}/api/{lvRegion['lang']}/catalog/product/{sku_simple_info['productId']}"
-            product_info_url_text = requests.get(product_info_url, headers = self.headers).text
+            product_info_url_text = requests.get(product_info_url, headers = self.headers, timeout=10).text
             product_info = json.loads(product_info_url_text)
         
             if  product_info:
